@@ -64,7 +64,8 @@ function show_message(json_string) {
         div.innerHTML += html;
         div.scrollTop = div.scrollHeight;
         if (!$('#online [data-chat="p_' + data.from + '"]').hasClass('active')) {
-            $('#online [data-chat="p_' + data.from + '"] .preview').html('你有新消息')
+            $('#online [data-chat="p_' + data.from + '"] .new_blink').show()
+            $('#online [data-chat="p_' + data.from + '"] .pp_status').hide()
         }
         return true
     }
@@ -72,7 +73,8 @@ function show_message(json_string) {
     // $('#content').scrollIntoView();
 
     if (!$('#online [data-chat="chat_group"]').hasClass('active')) {
-        $('#online [data-chat="chat_group"] .preview').html('你有新消息')
+        $('#online [data-chat="chat_group"] .new_blink').show()
+        $('#online [data-chat="chat_group"] .pp_status').hide()
     }
     var div = document.getElementById('content_form')
     div.innerHTML += html;
@@ -143,7 +145,9 @@ function pushOnline(people) {
         '<img src="/img/group.jpg" alt=""/>' +
         '<span class="name">Group</span>' +
         '<span class="time">2:09 PM</span>' +
-        '<span class="preview">当前在线<b id="people">' + Object.keys(people).length + '</b>人</span>' +
+        '<span class="preview pp_status"><span class="status away"></span>' +
+        '当前在线<b id="people">' + Object.keys(people).length + '</b>人</span>' +
+        '<span class="preview new_blink" style="display: none">你有新的消息</span>' +
         '</li>',
         chat = '<div class="chat active-chat" id="content_form" data-chat="chat_group">' +
             '<div class="conversation-start">' +
@@ -157,7 +161,8 @@ function pushOnline(people) {
                 '<img src="' + v.avatar + '" alt=""/>' +
                 '<span class="name">' + v.name + '</span>' +
                 '<span class="time">2:09 PM</span>' +
-                '<span class="preview">Online</span>' +
+                '<span class="preview pp_status"><span class="status online"></span>Online</span>' +
+                '<span class="preview new_blink" style="display: none">你有新的消息</span>' +
                 '</li>';
             chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
                 '<div class="conversation-start">' +
@@ -246,10 +251,12 @@ function setAciveChat(f, friends, chat) {
     friends.name = f.querySelector('.name').innerText;
     chat.name.innerHTML = friends.name;
     if (friends.name === 'Group') {
-        var num = friends.all.length - 1;
-        $('#online [data-chat="chat_group"] .preview').html('当前在线<b>' + num + '</b>人')
+        $('#people').html(friends.all.length)
+        $('#online [data-chat="chat_group"] .new_blink').hide()
+        $('#online [data-chat="chat_group"] .pp_status').show()
     } else {
-        $('#online [data-chat="p_' + friends.name + '"] .preview').html('Online')
+        $('#online [data-chat="p_' + friends.name + '"] .new_blink').hide()
+        $('#online [data-chat="p_' + friends.name + '"] .pp_status').show()
     }
     // getHitory(friends.name)
     gotoEnd()

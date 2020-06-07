@@ -63,6 +63,64 @@
             height: 100%;
         }
 
+
+        /* 定义keyframe动画，命名为blink */
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* 添加兼容性前缀 */
+        @-webkit-keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @-moz-keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @-ms-keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @-o-keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* 定义blink类*/
+        .new_blink {
+            color: #dd4814 !important;
+            animation: blink 1s linear infinite;
+            /* 其它浏览器兼容性前缀 */
+            -webkit-animation: blink 1s linear infinite;
+            -moz-animation: blink 1s linear infinite;
+            -ms-animation: blink 1s linear infinite;
+            -o-animation: blink 1s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -73,8 +131,11 @@
             <div class="top">
                 <img src="{{ avatar if avatar else '/img/h.jpg' }}" alt="" class="avatar" id="user_avatar"/>
                 <input type="hidden" value="{{ username if username else 'Heanny' }}" id="username">
+
                 <span id="name">{{ name if name else 'Heanny' }}</span>
-                <span class="state">Online</span>
+                <div class="state">
+                    <span class="status online"></span>Online
+                </div>
                 <div style="display: none">
                     <input type="text" placeholder="Search"/>
                     <a href="javascript:;" class="search"></a>
@@ -86,7 +147,8 @@
                     <img src="/img/group.jpg" alt=""/>
                     <span class="name">Group</span>
                     <span class="time">2:09 PM</span>
-                    <span class="preview">当前在线<b id="people">0</b>人</span>
+                    <span class="preview pp_status">当前在线<b id="people">0</b>人</span>
+                    <span class="preview new_blink">你有新的消息</span>
                 </li>
                 <li class="person" data-chat="person1">
                     <img src="/img/thomas.jpg" alt=""/>
@@ -98,7 +160,11 @@
             </ul>
         </div>
         <div class="right">
-            <div class="top"><span>To: <span class="name" id="toUser">Group</span></span></div>
+            <div class="top">
+                <span>To:
+                    <span class="name" id="toUser">Group</span>
+                </span>
+            </div>
             <div id="online_chat">
                 <div class="chat active-chat" id="content_form" data-chat="chat_group">
                     <div class="conversation-start">

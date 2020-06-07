@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>聊天室</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="/css/reset.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .avatar {
+            float: left;
+            width: 50px;
+            height: 50px;
+            margin-right: 12px;
+            border-radius: 50%;
+        }
+
+        #username {
+            line-height: 50px;
+        }
+
+        #name {
+            display: block;
+            line-height: 30px;
+        }
+
+        .group_you .you_name {
+            color: #8c8989;
+            font-size: 10px;
+            margin: 0 auto 5px auto;
+        }
+
+        .group_you .you_msg {
+            color: var(--white);
+            background-color: var(--blue);
+            align-self: flex-start;
+            -webkit-animation-name: slideFromLeft;
+            animation-name: slideFromLeft;
+            max-width: 80%;
+        }
+
+        .group_you .you_msg:before {
+            left: -3px;
+            background-color: var(--blue);
+        }
+
+        .welcome_msg, .leave_msg {
+            margin: 5px auto;
+            text-align: center;
+        }
+
+        .welcome_msg {
+            color: green;
+        }
+
+        .leave_msg {
+            color: red;
+        }
+
+        #online_chat {
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="left">
+            <div class="top">
+                <img src="{{ avatar if avatar else '/img/h.jpg' }}" alt="" class="avatar" id="user_avatar"/>
+                <input type="hidden" value="{{ username if username else 'Heanny' }}" id="username">
+                <span id="name">{{ name if name else 'Heanny' }}</span>
+                <span class="state">Online</span>
+                <div style="display: none">
+                    <input type="text" placeholder="Search"/>
+                    <a href="javascript:;" class="search"></a>
+                </div>
+
+            </div>
+            <ul class="people" id="online">
+                <li class="person" data-chat="chat_group">
+                    <img src="/img/group.jpg" alt=""/>
+                    <span class="name">Group</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">当前在线<b id="people">0</b>人</span>
+                </li>
+                <li class="person" data-chat="person1">
+                    <img src="/img/thomas.jpg" alt=""/>
+                    <span class="name">Thomas Bangalter</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I was wondering...</span>
+                </li>
+
+            </ul>
+        </div>
+        <div class="right">
+            <div class="top"><span>To: <span class="name" id="toUser">Group</span></span></div>
+            <div id="online_chat">
+                <div class="chat active-chat" id="content_form" data-chat="chat_group">
+                    <div class="conversation-start">
+                        <span>Today, 6:48 AM</span>
+                    </div>
+                    <div class="group_you">
+                        <img src="img/thomas.jpg" alt="" class="avatar"/>
+                        <div class="you_name">fea</div>
+                        <div class="bubble you_msg">
+                            Hello,world!
+                        </div>
+                    </div>
+                    <div class="bubble me">
+                        Why aren't you answering?
+                    </div>
+                </div>
+            </div>
+
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input type="text" id="text" placeholder="请输入聊天内容"/>
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send" id="button-send"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>

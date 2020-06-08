@@ -6,7 +6,7 @@ $(document).ready(function () {
     if (ws) {
         return;
     }
-    ws = new WebSocket('ws://127.0.0.1:5002/echo');
+    ws = new WebSocket('ws://192.168.8.116:5002/echo');
 
     var name = $('#name').html();
     var avatar = $('#user_avatar').attr('src');
@@ -141,13 +141,13 @@ function pushMsg(history) {
 
 function pushOnline(people) {
     var user = $('#username').val();
-    var html = '<li class="person active" data-chat="chat_group">' +
+    var html = '<li class="person active" data-chat="chat_group" data-msg="0">' +
         '<img src="/img/group.jpg" alt=""/>' +
         '<span class="name">Group</span>' +
         '<span class="time">2:09 PM</span>' +
-        '<span class="preview pp_status"><span class="status away"></span>' +
-        '当前在线<b id="people">' + Object.keys(people).length + '</b>人</span>' +
-        '<span class="preview new_blink" style="display: none">你有新的消息</span>' +
+        '<div class="preview pp_status status away">' +
+        '当前在线<b id="people">' + Object.keys(people).length + '</b>人</div>' +
+        '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
         '</li>',
         chat = '<div class="chat active-chat" id="content_form" data-chat="chat_group">' +
             '<div class="conversation-start">' +
@@ -161,8 +161,8 @@ function pushOnline(people) {
                 '<img src="' + v.avatar + '" alt=""/>' +
                 '<span class="name">' + v.name + '</span>' +
                 '<span class="time">2:09 PM</span>' +
-                '<span class="preview pp_status"><span class="status online"></span>Online</span>' +
-                '<span class="preview new_blink" style="display: none">你有新的消息</span>' +
+                '<div class="preview pp_status status online">Online</div>' +
+                '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
                 '</li>';
             chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
                 '<div class="conversation-start">' +
@@ -180,32 +180,40 @@ function pushOnline(people) {
 function peopleEnter(data) {
     var newP = data.name
     var v = data.people[newP]
-    var html = $('#online')[0].innerHTML,
-        chat = $('#online_chat')[0].innerHTML;
-    html += '<li class="person" data-chat="p_' + newP + '">' +
-        '<img src="' + v.avatar + '" alt=""/>' +
-        '<span class="name">' + v.name + '</span>' +
-        '<span class="time">2:09 PM</span>' +
-        '<span class="preview">Online</span>' +
-        '</li>';
-    chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
-        '<div class="conversation-start">' +
-        '<span>Today, 6:48 AM</span>' +
-        '</div>' +
-        '</div>';
+    if ($('#online [data-chat="p_' + newP + '"]').length > 0) {
+        $('#online [data-chat="p_' + data.name + '"] .status').removeClass('offline').addClass('online').html('Online');
+    } else {
+        var html = $('#online')[0].innerHTML,
+            chat = $('#online_chat')[0].innerHTML;
+        html += '<li class="person" data-chat="p_' + newP + '">' +
+            '<img src="' + v.avatar + '" alt=""/>' +
+            '<span class="name">' + v.name + '</span>' +
+            '<span class="time">2:09 PM</span>' +
+            '<div class="preview pp_status status online">Online</div>' +
+            '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
+            '</li>';
+        chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
+            '<div class="conversation-start">' +
+            '<span>Today, 6:48 AM</span>' +
+            '</div>' +
+            '</div>';
 
-    $('#online').html(html)
-    $('#online_chat').html(chat)
+        $('#online').html(html)
+        $('#online_chat').html(chat)
+    }
+
     allReady()
 }
 
 function peopleLeave(data) {
-    if ($('#online [data-chat="p_' + data.name + '"] ').hasClass('active')) {
-        document.querySelector('.person[data-chat=chat_group]').classList.add('active');
-        document.querySelector('.chat[data-chat=chat_group]').classList.add('active-chat');
-    }
-    $('#online [data-chat="p_' + data.name + '"]').remove();
-    $('#online_chat [data-chat="p_' + data.name + '"]').remove();
+    console.log('peopleLeave', data)
+    // if ($('#online [data-chat="p_' + data.name + '"] ').hasClass('active')) {
+    //     document.querySelector('.person[data-chat=chat_group]').classList.add('active');
+    //     document.querySelector('.chat[data-chat=chat_group]').classList.add('active-chat');
+    // }
+    $('#online [data-chat="p_' + data.name + '"] .status').removeClass('online').addClass('offline').html('Offline');
+    // $('#online [data-chat="p_' + data.name + '"]').remove();
+    // $('#online_chat [data-chat="p_' + data.name + '"]').remove();
     //allReady()
 }
 
@@ -251,7 +259,6 @@ function setAciveChat(f, friends, chat) {
     friends.name = f.querySelector('.name').innerText;
     chat.name.innerHTML = friends.name;
     if (friends.name === 'Group') {
-        $('#people').html(friends.all.length)
         $('#online [data-chat="chat_group"] .new_blink').hide()
         $('#online [data-chat="chat_group"] .pp_status').show()
     } else {

@@ -10,13 +10,14 @@ sockets = Sockets(app)
 ws_pool = {}
 
 
-def delpool(ws):
-    key = None
-    for k in ws_pool.keys():
-        if ws == ws_pool[k]['ws']:
-            key = k
-            continue
-    del ws_pool[key]
+def delpool(ws, pool):
+    return {k: v for k, v in pool.items() if v['ws'] != ws}
+    # key = None
+    # for k in ws_pool.keys():
+    #     if ws == ws_pool[k]['ws']:
+    #         key = k
+    #         continue
+    # del ws_pool[key]
 
 
 def getOnline(ws_pool):
@@ -26,6 +27,7 @@ def getOnline(ws_pool):
 #  ws://
 @sockets.route('/echo')
 def echo_socket(ws):
+    global ws_pool
     r_data = ws.receive()
     r_data = json.loads(r_data)
     if not r_data['type'] == 'open':
@@ -43,20 +45,21 @@ def echo_socket(ws):
                 'people': getOnline(ws_pool),
                 'history': [
                     {'time': '2020-05-01', 'body': 'time'},
-                    {'user': '霸王龙', 'avatar': '/img/bwl.jpg', 'body': 'you', 'msg': '你是谁'},
-                    {'user': '霸王龙', 'avatar': '/img/bwl.jpg', 'body': 'you', 'msg': '我爱你'},
+                    {'user': 'A', 'avatar': '/img/bwl.jpg', 'body': 'you', 'msg': '你是谁'},
+                    {'user': 'A', 'avatar': '/img/bwl.jpg', 'body': 'you', 'msg': '你在哪'},
                     {'time': '2020-05-20', 'body': 'time'},
-                    {'user': 'Heanny', 'avatar': '/img/default.jpg', 'body': 'me', 'msg': '我也爱你'},
+                    {'user': 'Heanny', 'avatar': '/img/default.jpg', 'body': 'me', 'msg': '你瞅啥'},
                 ]}}))
         else:
             try:
                 e.send(json.dumps({'type': 'enter',
-                                   'data': {'name': name, 'people': getOnline(ws_pool),
+                                   'data': {'name': name,
+                                            'people': getOnline(ws_pool),
                                             'time': time.strftime('%H:%M:%S',
                                                                   time.localtime())}}))
             except Exception as error:
                 print(error)
-                delpool(e)
+                ws_pool = delpool(e, ws_pool)
 
     while not ws.closed:
         r_data = ws.receive()
@@ -85,13 +88,16 @@ def echo_socket(ws):
                                                                             time.localtime()), 'body': 'time'}],
                                          'user': r_data['data']['user']}}))
         elif r_data['type'] == 'private':
-            ws_pool[r_data['data']['to']]['ws'].send(json.dumps({'type': 'private',
-                                                                   'data': {'from': r_data['data']['user'],
-                                                                            'msg': r_data['data']['content'],
-                                                                            'avatar':avatar,
-                                                                            'user':r_data['data']['to']
-                                                                            }}))
-    delpool(ws)
+            try:
+                ws_pool[r_data['data']['to']]['ws'].send(json.dumps({'type': 'private',
+                                                                     'data': {'from': r_data['data']['user'],
+                                                                              'msg': r_data['data']['content'],
+                                                                              'avatar': avatar,
+                                                                              'user': r_data['data']['to']
+                                                                              }}))
+            except Exception as error:
+                pass
+    ws_pool = delpool(ws, ws_pool)
     print('{}离开了，当前在线人数：{}'.format(name, len(ws_pool)))
     for k, v in ws_pool.items():
         e = v['ws']

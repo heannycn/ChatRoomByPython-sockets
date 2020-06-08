@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>聊天室</title>
-
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
     <link rel="stylesheet" href="/css/reset.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -57,6 +56,12 @@
 
         .leave_msg {
             color: red;
+        }
+
+        #online {
+            overflow: auto;
+            overflow-x: hidden;
+            height: calc(100% - 116px);
         }
 
         #online_chat {
@@ -131,7 +136,6 @@
             <div class="top">
                 <img src="{{ avatar if avatar else '/img/h.jpg' }}" alt="" class="avatar" id="user_avatar"/>
                 <input type="hidden" value="{{ username if username else 'Heanny' }}" id="username">
-
                 <span id="name">{{ name if name else 'Heanny' }}</span>
                 <div class="state">
                     <span class="status online"></span>Online
@@ -140,7 +144,6 @@
                     <input type="text" placeholder="Search"/>
                     <a href="javascript:;" class="search"></a>
                 </div>
-
             </div>
             <ul class="people" id="online">
                 <li class="person" data-chat="chat_group">
@@ -148,7 +151,7 @@
                     <span class="name">Group</span>
                     <span class="time">2:09 PM</span>
                     <span class="preview pp_status">当前在线<b id="people">0</b>人</span>
-                    <span class="preview new_blink">你有新的消息</span>
+                    <span class="preview new_blink" style="display: none;">你有新的消息</span>
                 </li>
                 <li class="person" data-chat="person1">
                     <img src="/img/thomas.jpg" alt=""/>
@@ -156,7 +159,6 @@
                     <span class="time">2:09 PM</span>
                     <span class="preview">I was wondering...</span>
                 </li>
-
             </ul>
         </div>
         <div class="right">
@@ -171,7 +173,7 @@
                         <span>Today, 6:48 AM</span>
                     </div>
                     <div class="group_you">
-                        <img src="img/thomas.jpg" alt="" class="avatar"/>
+                        <img src="/img/thomas.jpg" alt="" class="avatar"/>
                         <div class="you_name">fea</div>
                         <div class="bubble you_msg">
                             Hello,world!
@@ -184,15 +186,15 @@
             </div>
 
             <div class="write">
-                <a href="javascript:;" class="write-link attach"></a>
+                <a href="javascript:void(0);" class="write-link attach"></a>
                 <input type="text" id="text" placeholder="请输入聊天内容"/>
-                <a href="javascript:;" class="write-link smiley"></a>
-                <a href="javascript:;" class="write-link send" id="button-send"></a>
+                <a href="javascript:void(0);" class="write-link smiley"></a>
+                <a href="javascript:void(0);" class="write-link send" id="button-send"></a>
             </div>
         </div>
     </div>
 </div>
-<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="/js/jquery.min.js"></script>
 <script src="/js/index.js"></script>
 </body>
 </html>

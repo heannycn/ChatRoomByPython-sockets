@@ -181,6 +181,7 @@ body {
     color: #a5a5a5;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 600;
+    display: block;
 }
 
 .container .left .people .person .time {
@@ -195,7 +196,7 @@ body {
 
 .container .left .people .person .preview {
     font-size: 14px;
-    display: inline-block;
+    /*display: inline-block;*/
     overflow: hidden !important;
     width: 70%;
     white-space: nowrap;

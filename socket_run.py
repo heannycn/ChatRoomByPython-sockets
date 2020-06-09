@@ -43,6 +43,7 @@ def echo_socket(ws):
         if e == ws:
             ws.send(json.dumps({'type': 'init', 'data': {
                 'people': getOnline(ws_pool),
+                'time': time.strftime('%H:%M:%S', time.localtime()),
                 'history': [
                     {'time': '2020-05-01', 'body': 'time'},
                     {'user': 'A', 'avatar': '/img/bwl.jpg', 'body': 'you', 'msg': '你是谁'},

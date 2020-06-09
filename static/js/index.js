@@ -38,7 +38,7 @@ function show_message(json_string) {
         html += '<div class="welcome_msg">-- ' + data.name + ' 进入了聊天室！--</div>';
         peopleEnter(data)
     } else if (type === 'init') {
-        pushOnline(data.people)
+        pushOnline(data.people,data.time)
         pushMsg(data.history)
     } else if (type === 'history') {
         pushMsg(data.history)
@@ -139,12 +139,12 @@ function pushMsg(history) {
     div.scrollTop = div.scrollHeight;
 }
 
-function pushOnline(people) {
+function pushOnline(people,time) {
     var user = $('#username').val();
     var html = '<li class="person active" data-chat="chat_group" data-msg="0">' +
         '<img src="/img/group.jpg" alt=""/>' +
         '<span class="name">Group</span>' +
-        '<span class="time">2:09 PM</span>' +
+        '<span class="time">'+time.substring(0,5)+'</span>' +
         '<div class="preview pp_status status away">' +
         '当前在线<b id="people">' + Object.keys(people).length + '</b>人</div>' +
         '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
@@ -160,7 +160,7 @@ function pushOnline(people) {
             html += '<li class="person" data-chat="p_' + k + '">' +
                 '<img src="' + v.avatar + '" alt=""/>' +
                 '<span class="name">' + v.name + '</span>' +
-                '<span class="time">2:09 PM</span>' +
+                '<span class="time">'+time.substring(0,5)+'</span>' +
                 '<div class="preview pp_status status online">Online</div>' +
                 '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
                 '</li>';
@@ -188,7 +188,7 @@ function peopleEnter(data) {
         html += '<li class="person" data-chat="p_' + newP + '">' +
             '<img src="' + v.avatar + '" alt=""/>' +
             '<span class="name">' + v.name + '</span>' +
-            '<span class="time">2:09 PM</span>' +
+            '<span class="time">' + data.time.substring(0, 5) + '</span>' +
             '<div class="preview pp_status status online">Online</div>' +
             '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
             '</li>';
@@ -201,12 +201,13 @@ function peopleEnter(data) {
         $('#online').html(html)
         $('#online_chat').html(chat)
     }
-
+    $('#people').html(Object.keys(data.people).length)
     allReady()
 }
 
 function peopleLeave(data) {
     console.log('peopleLeave', data)
+    $('#people').html(Object.keys(data.people).length)
     // if ($('#online [data-chat="p_' + data.name + '"] ').hasClass('active')) {
     //     document.querySelector('.person[data-chat=chat_group]').classList.add('active');
     //     document.querySelector('.chat[data-chat=chat_group]').classList.add('active-chat');

@@ -6,7 +6,7 @@ $(document).ready(function () {
     if (ws) {
         return;
     }
-    ws = new WebSocket('ws://192.168.8.116:5002/echo');
+    ws = new WebSocket(location.protocol === 'http:' ? 'ws://ws.heanny.cn/echo' : 'wss://ws.heanny.cn/echo');
 
     var name = $('#name').html();
     var avatar = $('#user_avatar').attr('src');

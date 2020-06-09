@@ -20,7 +20,7 @@ $(document).ready(function () {
         show_message(r_data);
     }
     ws.onclose = function () {
-        //alert('连接已关闭...');
+        console.log('连接已关闭...');
     }
 })
 
@@ -38,7 +38,7 @@ function show_message(json_string) {
         html += '<div class="welcome_msg">-- ' + data.name + ' 进入了聊天室！--</div>';
         peopleEnter(data)
     } else if (type === 'init') {
-        pushOnline(data.people,data.time)
+        pushOnline(data.people, data.time)
         pushMsg(data.history)
     } else if (type === 'history') {
         pushMsg(data.history)
@@ -52,8 +52,11 @@ function show_message(json_string) {
             '<div class="bubble you_msg">' + data.content +
             '</div>' +
             '</div>';
+        $('#online [data-chat="chat_group"] .time').html(data.time.substring(0, 5))
+        var msg_length = parseInt($('#online [data-chat="chat_group"]').attr('data-msg'))
+        $('#online [data-chat="chat_group"] .msg_length').html(msg_length + 1)
+        $('#online [data-chat="chat_group"]').attr('data-msg', msg_length + 1)
     } else if (type === 'private') {
-        console.log('private', data)
         html = '<div class="group_you">' +
             '<img src="' + avatar + '" alt="" class="avatar"/>' +
             '<div class="you_name">' + data.from + '</div>' +
@@ -66,7 +69,11 @@ function show_message(json_string) {
         if (!$('#online [data-chat="p_' + data.from + '"]').hasClass('active')) {
             $('#online [data-chat="p_' + data.from + '"] .new_blink').show()
             $('#online [data-chat="p_' + data.from + '"] .pp_status').hide()
+            var msg_length = parseInt($('#online [data-chat="p_' + data.from + '"]').attr('data-msg'))
+            $('#online [data-chat="p_' + data.from + '"] .msg_length').html(msg_length + 1)
+            $('#online [data-chat="p_' + data.from + '"]').attr('data-msg', msg_length + 1)
         }
+        $('#online [data-chat="p_' + data.from + '"] .time').html(data.time.substring(0, 5))
         return true
     }
 
@@ -113,7 +120,6 @@ document.getElementById('text').onkeypress = function (event) {
         send_message();
         event.preventDefault();
     }
-
 }
 
 function pushMsg(history) {
@@ -139,38 +145,39 @@ function pushMsg(history) {
     div.scrollTop = div.scrollHeight;
 }
 
-function pushOnline(people,time) {
+function pushOnline(people, time) {
     var user = $('#username').val();
     var html = '<li class="person active" data-chat="chat_group" data-msg="0">' +
         '<img src="/img/group.jpg" alt=""/>' +
         '<span class="name">Group</span>' +
-        '<span class="time">'+time.substring(0,5)+'</span>' +
+        '<span class="time">' + time.substring(0, 5) + '</span>' +
         '<div class="preview pp_status status away">' +
         '当前在线<b id="people">' + Object.keys(people).length + '</b>人</div>' +
-        '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
+        '<div class="preview new_blink" style="display: none">' +
+        '<span class="status online"></span>你有<b class="msg_length">0</b>条新的消息</div>' +
         '</li>',
         chat = '<div class="chat active-chat" id="content_form" data-chat="chat_group">' +
             '<div class="conversation-start">' +
-            '<span>Today, 6:48 AM</span>' +
+            '<span>Today, ' + time + '</span>' +
             '</div>' +
             '</div>';
     Object.keys(people).forEach(function (k) {
         if (k !== user) {
             v = people[k]
-            html += '<li class="person" data-chat="p_' + k + '">' +
+            html += '<li class="person" data-chat="p_' + k + '" data-msg="0">' +
                 '<img src="' + v.avatar + '" alt=""/>' +
                 '<span class="name">' + v.name + '</span>' +
-                '<span class="time">'+time.substring(0,5)+'</span>' +
+                '<span class="time">' + time.substring(0, 5) + '</span>' +
                 '<div class="preview pp_status status online">Online</div>' +
-                '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
+                '<div class="preview new_blink" style="display: none">' +
+                '<span class="status online"></span>你有<b class="msg_length">0</b>条新的消息</div>' +
                 '</li>';
             chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
                 '<div class="conversation-start">' +
-                '<span>Today, 6:48 AM</span>' +
+                '<span>Today, ' + time + '</span>' +
                 '</div>' +
                 '</div>';
         }
-
     })
     $('#online').html(html)
     $('#online_chat').html(chat)
@@ -185,19 +192,19 @@ function peopleEnter(data) {
     } else {
         var html = $('#online')[0].innerHTML,
             chat = $('#online_chat')[0].innerHTML;
-        html += '<li class="person" data-chat="p_' + newP + '">' +
+        html += '<li class="person" data-chat="p_' + newP + '" data-msg="0">' +
             '<img src="' + v.avatar + '" alt=""/>' +
             '<span class="name">' + v.name + '</span>' +
             '<span class="time">' + data.time.substring(0, 5) + '</span>' +
             '<div class="preview pp_status status online">Online</div>' +
-            '<div class="preview new_blink" style="display: none"><span class="status online"></span>你有新的消息</div>' +
+            '<div class="preview new_blink" style="display: none">' +
+            '<span class="status online"></span>你有<b class="msg_length">0</b>条新的消息</div>' +
             '</li>';
         chat += '<div class="chat" id="content_form_' + v.name + '" data-chat="p_' + v.name + '">' +
             '<div class="conversation-start">' +
-            '<span>Today, 6:48 AM</span>' +
+            '<span>Today, ' + data.time + '</span>' +
             '</div>' +
             '</div>';
-
         $('#online').html(html)
         $('#online_chat').html(chat)
     }
@@ -206,20 +213,11 @@ function peopleEnter(data) {
 }
 
 function peopleLeave(data) {
-    console.log('peopleLeave', data)
     $('#people').html(Object.keys(data.people).length)
-    // if ($('#online [data-chat="p_' + data.name + '"] ').hasClass('active')) {
-    //     document.querySelector('.person[data-chat=chat_group]').classList.add('active');
-    //     document.querySelector('.chat[data-chat=chat_group]').classList.add('active-chat');
-    // }
     $('#online [data-chat="p_' + data.name + '"] .status').removeClass('online').addClass('offline').html('Offline');
-    // $('#online [data-chat="p_' + data.name + '"]').remove();
-    // $('#online_chat [data-chat="p_' + data.name + '"]').remove();
-    //allReady()
 }
 
 function getHitory(user) {
-    console.log(user)
     ws.send(JSON.stringify({'type': 'history', 'data': {'user': user,}}));
 
 }
@@ -262,9 +260,11 @@ function setAciveChat(f, friends, chat) {
     if (friends.name === 'Group') {
         $('#online [data-chat="chat_group"] .new_blink').hide()
         $('#online [data-chat="chat_group"] .pp_status').show()
+        $('#online [data-chat="chat_group"]').attr('data-msg', 0)
     } else {
         $('#online [data-chat="p_' + friends.name + '"] .new_blink').hide()
         $('#online [data-chat="p_' + friends.name + '"] .pp_status').show()
+        $('#online [data-chat="p_' + friends.name + '"]').attr('data-msg', 0)
     }
     // getHitory(friends.name)
     gotoEnd()

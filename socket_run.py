@@ -90,12 +90,14 @@ def echo_socket(ws):
                                          'user': r_data['data']['user']}}))
         elif r_data['type'] == 'private':
             try:
-                ws_pool[r_data['data']['to']]['ws'].send(json.dumps({'type': 'private',
-                                                                     'data': {'from': r_data['data']['user'],
-                                                                              'msg': r_data['data']['content'],
-                                                                              'avatar': avatar,
-                                                                              'user': r_data['data']['to']
-                                                                              }}))
+                ws_pool[r_data['data']['to']]['ws'].send(
+                    json.dumps({'type': 'private',
+                                'data': {'from': r_data['data']['user'],
+                                         'msg': r_data['data']['content'],
+                                         'avatar': avatar,
+                                         'user': r_data['data']['to'],
+                                         'time': time.strftime('%H:%M:%S', time.localtime())
+                                         }}))
             except Exception as error:
                 pass
     ws_pool = delpool(ws, ws_pool)

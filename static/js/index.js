@@ -56,6 +56,10 @@ function show_message(json_string) {
         var msg_length = parseInt($('#online [data-chat="chat_group"]').attr('data-msg'))
         $('#online [data-chat="chat_group"] .msg_length').html(msg_length + 1)
         $('#online [data-chat="chat_group"]').attr('data-msg', msg_length + 1)
+        if (!$('#online [data-chat="chat_group"]').hasClass('active')) {
+            $('#online [data-chat="chat_group"] .new_blink').show()
+            $('#online [data-chat="chat_group"] .pp_status').hide()
+        }
     } else if (type === 'private') {
         html = '<div class="group_you">' +
             '<img src="' + avatar + '" alt="" class="avatar"/>' +
@@ -76,13 +80,7 @@ function show_message(json_string) {
         $('#online [data-chat="p_' + data.from + '"] .time').html(data.time.substring(0, 5))
         return true
     }
-
     // $('#content').scrollIntoView();
-
-    if (!$('#online [data-chat="chat_group"]').hasClass('active')) {
-        $('#online [data-chat="chat_group"] .new_blink').show()
-        $('#online [data-chat="chat_group"] .pp_status').hide()
-    }
     var div = document.getElementById('content_form')
     div.innerHTML += html;
     div.scrollTop = div.scrollHeight;
@@ -188,7 +186,12 @@ function peopleEnter(data) {
     var newP = data.name
     var v = data.people[newP]
     if ($('#online [data-chat="p_' + newP + '"]').length > 0) {
-        $('#online [data-chat="p_' + data.name + '"] .status').removeClass('offline').addClass('online').html('Online');
+        // $('#online [data-chat="p_' + data.name + '"] .status').removeClass('offline').addClass('online').html('Online');
+        if ($('#online [data-chat="p_' + data.name + '"] .pp_status').is(':hidden')) {
+            $('#online [data-chat="p_' + data.name + '"] .status').removeClass('offline').addClass('online');
+        } else {
+            $('#online [data-chat="p_' + data.name + '"] .status').removeClass('offline').addClass('online').html('Offline');
+        }
     } else {
         var html = $('#online')[0].innerHTML,
             chat = $('#online_chat')[0].innerHTML;
@@ -214,7 +217,13 @@ function peopleEnter(data) {
 
 function peopleLeave(data) {
     $('#people').html(Object.keys(data.people).length)
-    $('#online [data-chat="p_' + data.name + '"] .status').removeClass('online').addClass('offline').html('Offline');
+    console.log('hidden', $('#online [data-chat="p_' + data.name + '"] .pp_status').is(':hidden'))
+    console.log('visible', $('#online [data-chat="p_' + data.name + '"] .pp_status').is(':visible'))
+    if ($('#online [data-chat="p_' + data.name + '"] .pp_status').is(':hidden')) {
+        $('#online [data-chat="p_' + data.name + '"] .status').removeClass('online').addClass('offline');
+    } else {
+        $('#online [data-chat="p_' + data.name + '"] .status').removeClass('online').addClass('offline').html('Offline');
+    }
 }
 
 function getHitory(user) {

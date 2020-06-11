@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>聊天室</title>
+    {#    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">#}
+    <link href="/css/fonts.css?family=Source+Sans+Pro:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="/css/reset.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="left">
+            <div class="top">
+                <img src="{{ avatar }}" alt="" class="avatar" id="user_avatar"/>
+                <input type="hidden" value="{{ username }}" id="username">
+                <span id="name">{{ name }}<a href="/logout.html" class="exit_img"></a></span>
+                <div class="state">
+                    <span class="status online"></span>Online
+                </div>
+                <div style="display: none">
+                    <input type="text" placeholder="Search"/>
+                    <a href="javascript:;" class="search"></a>
+                </div>
+            </div>
+            <ul class="people" id="online">
+                <li class="person" data-chat="chat_group" data-msg="0">
+                    <img src="/img/group.jpg" alt=""/>
+                    <span class="name">Group</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview pp_status">当前在线<b id="people">0</b>人</span>
+                    <span class="preview new_blink" style="display: none;">你有新的消息</span>
+                </li>
+                <li class="person" data-chat="person1" hidden>
+                    <img src="/img/thomas.jpg" alt=""/>
+                    <span class="name">Thomas Bangalter</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I was wondering...</span>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
+            <div class="top">
+                <span>To:
+                    <span class="name" id="toUsername">Group</span>
+                    <input type="hidden" id="toUser" value="Group" class="username">
+                </span>
+            </div>
+            <div id="online_chat">
+                <div class="chat active-chat" id="content_form" data-chat="chat_group">
+                    <div class="conversation-start">
+                        <span>Today, 6:48 AM</span>
+                    </div>
+                    <div class="group_you">
+                        <img src="/img/thomas.jpg" alt="" class="avatar"/>
+                        <div class="you_name">fea</div>
+                        <div class="bubble you_msg">
+                            Hello,world!
+                        </div>
+                    </div>
+                    <div class="bubble me">
+                        Why aren't you answering?
+                    </div>
+                </div>
+            </div>
+
+            <div class="write">
+                <a href="javascript:void(0);" class="write-link attach"></a>
+                <input type="text" id="text" placeholder="请输入聊天内容"/>
+                <a href="javascript:void(0);" class="write-link smiley"></a>
+                <a href="javascript:void(0);" class="write-link send" id="button-send"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>

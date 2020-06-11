@@ -7,7 +7,11 @@ app = Flask(__name__, template_folder='./templates', static_url_path='', static_
 @app.route('/')
 @app.route('/chat')
 def index():
-    return render_template('index.html')
+    avatars = ['/img/dog.png', '/img/louis-ck.jpeg', '/img/michael-jordan.jpg', '/img/bo-jackson.jpg']
+    avatar = random.choice(avatars)
+    username = 'testuser'
+    name = 'testuser'
+    return render_template('index.html', **locals())
 
 
 @app.route('/<username>')
@@ -15,7 +19,7 @@ def index():
 def chat_user(username):
     avatars = ['/img/dog.png', '/img/louis-ck.jpeg', '/img/michael-jordan.jpg', '/img/bo-jackson.jpg']
     avatar = random.choice(avatars)
-    name = username
+    username,name = username,username
     return render_template('index.html', **locals())
 
 

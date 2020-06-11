@@ -1,7 +1,7 @@
 import multiprocessing
 
 bind = '0.0.0.0:8002'
-workers = 2
+workers = 1
 chdir = "/mnt/python/socket_web"
 backlog = 2048
 

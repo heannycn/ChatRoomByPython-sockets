@@ -12,6 +12,7 @@
 1.  pip3 install -r requirements.txt
 2.  cd chat_web && python3 run.py #运行聊天页面
 3.  cd socket_web && python3 socket_run.py #运行socket服务
+4.  run_XX.sh  为相应的生产环境启动，分别使用uwsgi/gunicorn，通过nginx反向代理即可使用
 
 #### 使用说明
 

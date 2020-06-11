@@ -9,9 +9,9 @@
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  pip3 install -r requirements.txt
+2.  cd chat_web && python3 run.py #运行聊天页面
+3.  cd socket_web && python3 socket_run.py #运行socket服务
 
 #### 使用说明
 
